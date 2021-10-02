@@ -174,5 +174,86 @@ void GPIO_DeInit(GPIO_RegDef_t *pGPIOx)
 	}
 }
 
+/**********************************************************************************************************
+ * @fn 				- GPIO_ReadFromInputPin
+ *
+ * #brief 			- This function read data from pin
+ * pGPIOx			- This is structure which contain: base address of the gpio peripheral and pin configuration
+ * PinNumber 		- Pin from we are reading data, this is pin number like in input data register
+ *
+ * @return 			-	This is 0 or 1
+
+ *
+ *********************************************************************************************************/
+uint8_t GPIO_ReadFromInputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
+{
+	uint8_t value;
+	value = (uint8_t)((pGPIOx->IDR >> PinNumber) & 0x00000001);
+	return value;
+}
+
+/**********************************************************************************************************
+ * @fn 				- GPIO_ReadFromInputPort
+ *
+ * #brief 			- This function read data from entire port
+ * pGPIOx			- This is structure which contain: base address of the gpio peripheral and pin configuration
+ *
+ * @return 			-	This is 0 or 1
+ *
+ *********************************************************************************************************/
+uint16_t GPIO_ReadFromInputPort(GPIO_RegDef_t *pGPIOx)
+{
+	uint16_t value;
+	value = (uint16_t)pGPIOx->IDR;
+	return value;
+}
+
+/**********************************************************************************************************
+ * @fn 				- GPIO_WriteToOutputPin
+ *
+ * #brief 			- This function write Value in the specific pin (PinNumber)
+ * pGPIOx			- Base address of the gpio peripheral
+ * PinNumber 		- Pin where we want to write data, this is pin number like in output data register
+ * Value 			- Value to write in specific register it can be 0 or 1
+ *
+ *********************************************************************************************************/
+void GPIO_WriteToOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber, uint8_t Value)
+{
+	if (Value == GPIO_PIN_SET)
+	{
+		// Write 1 to the output data register at the field corresponding to the pin number
+		pGPIOx->ODR |= (1 << PinNumber);
+	} else
+	{
+		// Write 0
+		pGPIOx->ODR &= ~(1 << PinNumber);
+	}
+}
+
+/**********************************************************************************************************
+ * @fn 				- GPIO_WriteToOutputPort
+ *
+ * #brief 			- This function write the Value in the entire Output data register
+ * pGPIOx			- Base address of the gpio peripheral
+ * Value			- Value to write in register it can be 0 or 1
+ *
+ *********************************************************************************************************/
+void GPIO_WriteToOutputPort(GPIO_RegDef_t *pGPIOx, uint16_t Value)
+{
+	pGPIOx->ODR = Value;
+}
+
+/**********************************************************************************************************
+ * @fn 				- GPIO_ToggleOutputPin
+ *
+ * #brief 			- This function toggle pin (PinNumer)
+ * @pGPIOx			- Base address of the gpio peripheral
+ * @PinNumber 		- Pin number
+ *
+ *********************************************************************************************************/
+void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
+{
+	pGPIOx->ODR ^= (1 << PinNumber);
+}
 
 
