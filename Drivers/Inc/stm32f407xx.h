@@ -175,6 +175,20 @@ typedef struct
 #define SYSCFG		( (SYSCFG_RegDef_t*) SYSCFG_BASEADDR )
 
 /*
+ * Clock Enable Macros for GPIOx peripherals
+*/
+
+#define GPIOA_PCLK_EN()		( RCC->AHB1ENR |= (1 << 0) )
+#define GPIOB_PCLK_EN()		( RCC->AHB1ENR |= (1 << 1) )
+#define GPIOC_PCLK_EN()		( RCC->AHB1ENR |= (1 << 2) )
+#define GPIOD_PCLK_EN()		( RCC->AHB1ENR |= (1 << 3) )
+#define GPIOE_PCLK_EN()		( RCC->AHB1ENR |= (1 << 4) )
+#define GPIOF_PCLK_EN()		( RCC->AHB1ENR |= (1 << 5) )
+#define GPIOG_PCLK_EN()		( RCC->AHB1ENR |= (1 << 6) )
+#define GPIOH_PCLK_EN()		( RCC->AHB1ENR |= (1 << 7) )
+#define GPIOI_PCLK_EN()		( RCC->AHB1ENR |= (1 << 8) )
+
+/*
  *  Clock Enable Macros for I2Cx peripherals
 */
 
@@ -267,6 +281,8 @@ typedef struct
 */
 
 #define SYSCFG_PCLK_DI 		( RCC->APB2ENR &= ~(1 << 14) )
+
+
 
 // Some generic macros
 #define ENABLE 				1
