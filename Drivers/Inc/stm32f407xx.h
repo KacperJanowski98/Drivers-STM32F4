@@ -305,4 +305,6 @@ typedef struct
 #define GPIO_PIN_SET		SET
 #define GPIO_PIN_RESET		RESET
 
+#include "gpio_drivers.h"
+
 #endif /* INC_STM32F407XX_H_ */
