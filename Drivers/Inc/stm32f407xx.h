@@ -10,9 +10,38 @@
 
 #include <stdint.h>
 
+/********************************************** START:Processor Specific Details *********************************************/
+/*
+ *  ARM Cortex Mx Processor NVIC ISERx register Addresses
+*/
+
+#define NVIC_ISER0 					( (volatile uint32_t*)0xE000E100 )
+#define NVIC_ISER1 					( (volatile uint32_t*)0xE000E104 )
+#define NVIC_ISER2 					( (volatile uint32_t*)0xE000E108 )
+#define NVIC_ISER3 					( (volatile uint32_t*)0xE000E10C )
+
+/*
+ *  ARM Cortex Mx Processor NVIC ICERx register Addresses
+*/
+
+#define NVIC_ICER0 					( (volatile uint32_t*)0xE000E180 )
+#define NVIC_ICER1 					( (volatile uint32_t*)0xE000E184 )
+#define NVIC_ICER2 					( (volatile uint32_t*)0xE000E188 )
+#define NVIC_ICER3 					( (volatile uint32_t*)0xE000E18C )
+
+/*
+ * ARM Cortex Mx Prosessor Priority Register Address Calculation
+*/
+#define NVIC_PR_BASE_ADDR 			( (volatile uint32_t*)0xE000E400)
+
+/*
+ *  ARM Cortex Mx Processor number of priority bits implemented in Priority Register
+*/
+#define NO_PR_BITS_IMPLEMENTED						4
+
 /*
  *  Base addresses of Flash and SRAM memories.
- */
+*/
 
 #define FLASH_BASEADDR						0x08000000U
 #define SRAM1_BASEADDR						0x20000000U
@@ -22,7 +51,7 @@
 
 /*
  *  AHBx and APBx Bus Peripheral base addresses.
- */
+*/
 
 #define PERIPH_BASEADDR						0x40000000U
 #define APB1PERIPH_BASEADDR					PERIPH_BASEADDR
@@ -32,7 +61,7 @@
 
 /*
  *  Base addresses of peripherals which are hanging on AHB1 bus.
- */
+*/
 
 #define GPIOA_BASEADDR					(AHB1PERIPH_BASEADDR + 0X0000)
 #define GPIOB_BASEADDR					(AHB1PERIPH_BASEADDR + 0X0400)
@@ -47,7 +76,7 @@
 
 /*
  * Base addresses of peripherals which are hanging on APB1 bus.
- */
+*/
 
 #define I2C1_BASEADDR 					(APB1PERIPH_BASEADDR + 0x5400)
 #define I2C2_BASEADDR 					(APB1PERIPH_BASEADDR + 0x5800)
@@ -63,7 +92,7 @@
 
 /*
  * Base addresses of peripherals which are hanging on APB2 bus.
- */
+*/
 
 #define SPI1_BASEADDR 					(APB2PERIPH_BASEADDR + 0x3000)
 #define USART1_BASEADDR 				(APB2PERIPH_BASEADDR + 0x1000)
@@ -209,24 +238,24 @@ typedef struct
  * Clock Enable Macros for USARTx peripherals
 */
 
-#define USART2_PCLK_EN 		( RCC->APB1ENR |= (1 << 17) )
-#define USART3_PCLK_EN 		( RCC->APB1ENR |= (1 << 17) )
+#define USART2_PCLK_EN() 		( RCC->APB1ENR |= (1 << 17) )
+#define USART3_PCLK_EN() 		( RCC->APB1ENR |= (1 << 17) )
 
-#define USART1_PCLK_EN 		( RCC->APB2ENR |= (1 << 4) )
-#define USART6_PCLK_EN 		( RCC->APB2ENR |= (1 << 5) )
+#define USART1_PCLK_EN() 		( RCC->APB2ENR |= (1 << 4) )
+#define USART6_PCLK_EN() 		( RCC->APB2ENR |= (1 << 5) )
 
 /*
  * Clock Enable Macros for UARTx peripherals
 */
 
-#define UART4_PCLK_EN 		( RCC->APB1ENR |= (1 << 19) )
-#define UART5_PCLK_EN 		( RCC->APB1ENR |= (1 << 20) )
+#define UART4_PCLK_EN() 		( RCC->APB1ENR |= (1 << 19) )
+#define UART5_PCLK_EN() 		( RCC->APB1ENR |= (1 << 20) )
 
 /*
  * Clock Enable Macros for SYSCFG peripheral
 */
 
-#define SYSCFG_PCLK_EN 		( RCC->APB2ENR |= (1 << 14) )
+#define SYSCFG_PCLK_EN() 		( RCC->APB2ENR |= (1 << 14) )
 
 /*
  * Clock Disable Macros for GPIOx peripherals
@@ -263,24 +292,24 @@ typedef struct
  * Clock Disable Macros for USARTx peripherals
 */
 
-#define USART2_PCLK_DI 		( RCC->APB1ENR &= ~(1 << 17) )
-#define USART3_PCLK_DI 		( RCC->APB1ENR &= ~(1 << 17) )
+#define USART2_PCLK_DI() 		( RCC->APB1ENR &= ~(1 << 17) )
+#define USART3_PCLK_DI() 		( RCC->APB1ENR &= ~(1 << 17) )
 
-#define USART1_PCLK_DI 		( RCC->APB2ENR &= ~(1 << 4) )
-#define USART6_PCLK_DI 		( RCC->APB2ENR &= ~(1 << 5) )
+#define USART1_PCLK_DI() 		( RCC->APB2ENR &= ~(1 << 4) )
+#define USART6_PCLK_DI() 		( RCC->APB2ENR &= ~(1 << 5) )
 
 /*
  * Clock Disable Macros for UARTx peripherals
 */
 
-#define UART4_PCLK_DI 		( RCC->APB1ENR &= ~(1 << 19) )
-#define UART5_PCLK_DI 		( RCC->APB1ENR &= ~(1 << 20) )
+#define UART4_PCLK_DI() 		( RCC->APB1ENR &= ~(1 << 19) )
+#define UART5_PCLK_DI() 		( RCC->APB1ENR &= ~(1 << 20) )
 
 /*
  * Clock Disable Macros for SYSCFG peripheral
 */
 
-#define SYSCFG_PCLK_DI 		( RCC->APB2ENR &= ~(1 << 14) )
+#define SYSCFG_PCLK_DI() 		( RCC->APB2ENR &= ~(1 << 14) )
 
 /*
  * Macros to reset GPIOx peripherals
@@ -295,6 +324,38 @@ typedef struct
 #define GPIOG_REG_RESET()		do{ ( RCC->AHB1RSTR |= (1 << 6) );		( RCC->AHB1RSTR &= ~(1 << 6) ); }while(0)
 #define GPIOH_REG_RESET()		do{ ( RCC->AHB1RSTR |= (1 << 7) );		( RCC->AHB1RSTR &= ~(1 << 7) ); }while(0)
 #define GPIOI_REG_RESET()		do{ ( RCC->AHB1RSTR |= (1 << 8) );		( RCC->AHB1RSTR &= ~(1 << 8) ); }while(0)
+
+/*
+ *  Returns port code for given GPIOx base address
+*/
+
+#define GPIO_BASEADDR_TO_CODE(x)			( (x == GPIOA) ?0:\
+												(x == GPIOB) ?1:\
+												(x == GPIOC) ?2:\
+												(x == GPIOA) ?3:\
+												(x == GPIOB) ?4:\
+												(x == GPIOC) ?5:\
+												(x == GPIOA) ?6:\
+												(x == GPIOB) ?7:0 )
+
+/*
+ * IRQ(Interrupt Request) Numbers of STM32F407x MCU
+*/
+
+#define IRQ_NO_EXTI0			6
+#define IRQ_NO_EXTI1			7
+#define IRQ_NO_EXTI2			8
+#define IRQ_NO_EXTI3			9
+#define IRQ_NO_EXTI4			10
+#define IRQ_NO_EXTI9_5			23
+#define IRQ_NO_EXTI15_10		40
+
+/*
+ * macros for all the possible priority levels
+*/
+
+#define NVIC_IRQ_PRIO0			0
+#define NVIC_IRQ_PRIO1			1
 
 // Some generic macros
 
