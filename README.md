@@ -8,9 +8,16 @@ Library containing drivers for handling peripherals on the STM32F407G-DISC1 boar
 - UART drivers
 
 ### GPIO Drivers APIs requirements:
-***- GPIO initialization***
-***- Enable/Disable GPIO port clock***
-***- Read From a GPIO Pin***
-***- Write to GPIO Pin***
-***- Configure alternate functionality***
-***- Interrupt Handling***
+- ***GPIO initialization***
+- ***Enable/Disable GPIO port clock***
+- ***Read From a GPIO Pin***
+- ***Write to GPIO Pin***
+- ***Configure alternate functionality***
+- ***Interrupt Handling***
+
+### SPI Drivers APIs requirements:
+- ***SPI Initialization / peripheral clock control***
+- ***SPI TX***
+- ***SPI RX***
+- ***SPI Interrupt configure & handling***
+- ***Other SPI management APIs***
