@@ -95,6 +95,7 @@
 */
 
 #define SPI1_BASEADDR 					(APB2PERIPH_BASEADDR + 0x3000)
+#define SPI4_BASEADDR					(APB2PERIPH_BASEADDR + 0x3400)
 #define USART1_BASEADDR 				(APB2PERIPH_BASEADDR + 0x1000)
 #define USART6_BASEADDR 				(APB2PERIPH_BASEADDR + 0x1400)
 #define EXTI_BASEADDR 					(APB2PERIPH_BASEADDR + 0x3C00)
@@ -221,6 +222,7 @@ typedef struct
 #define SPI1		( (SPI_RegDef_t*)SPI1_BASEADDR )
 #define SPI2		( (SPI_RegDef_t*)SPI2_BASEADDR )
 #define SPI3		( (SPI_RegDef_t*)SPI3_BASEADDR )
+#define SPI4		( (SPI_RegDef_t*)SPI4_BASEADDR )
 
 /*
  * Clock Enable Macros for GPIOx peripherals
@@ -345,6 +347,14 @@ typedef struct
 #define GPIOI_REG_RESET()		do{ ( RCC->AHB1RSTR |= (1 << 8) );		( RCC->AHB1RSTR &= ~(1 << 8) ); }while(0)
 
 /*
+ * Macros to reset SPIx peripherals
+*/
+
+#define SPI1_REG_RESET()		do{ ( RCC->APB2RSTR |= (1 << 12) );		( RCC->AHB1RSTR &= ~(1 << 12) ); }while(0)
+#define SPI2_REG_RESET()		do{ ( RCC->APB1RSTR |= (1 << 14) );		( RCC->AHB1RSTR &= ~(1 << 14) ); }while(0)
+#define SPI3_REG_RESET()		do{ ( RCC->APB1RSTR |= (1 << 15) );		( RCC->AHB1RSTR &= ~(1 << 15) ); }while(0)
+
+/*
  *  Returns port code for given GPIOx base address
 */
 
@@ -389,6 +399,7 @@ typedef struct
 #define NVIC_IRQ_PRIO13			13
 #define NVIC_IRQ_PRIO14			14
 #define NVIC_IRQ_PRIO15			15
+
 // Some generic macros
 
 #define ENABLE 				1
@@ -397,7 +408,31 @@ typedef struct
 #define RESET 				DISABLE
 #define GPIO_PIN_SET		SET
 #define GPIO_PIN_RESET		RESET
+#define FLAG_RESET			RESET
+#define FLAG_SET			SET
+
+/*****************************************************************************************************
+ * Bit position definitions of SPI peripheral
+ ****************************************************************************************************/
+#define SPI_CR1_CPHA		0
+#define SPI_CR1_CPOL		1
+#define SPI_CR1_BR			3
+#define SPI_CR1_DFF			11
+
+/**
+ * Bit position definition SPI_SR
+ */
+#define SPI_SR_RXNE			0
+#define SPI_SR_TXE			1
+#define SPI_SR_CHSIDE		2
+#define SPI_SR_UDR			3
+#define SPI_SR_CRCERR		4
+#define SPI_SR_MODF			5
+#define SPI_SR_OVR			6
+#define SPI_SR_BSY			7
+#define SPI_SR_FRE			8
 
 #include "gpio_drivers.h"
+#include "spi_drivers.h"
 
 #endif /* INC_STM32F407XX_H_ */
