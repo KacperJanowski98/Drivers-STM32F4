@@ -153,6 +153,21 @@ typedef struct
 	volatile uint32_t PLLI2SCFGR;		/*!<RCC PLLI2S configuration register, 								Address offset: 0x84 */
 }RCC_RegDef_t;
 
+/*
+ * peripheral register definition structure for SPI
+*/
+typedef struct
+{
+	volatile uint32_t CR1;				/*!<SPI control register 1, 										Address offset: 0x00*/
+	volatile uint32_t CR2;				/*!<SPI control register 2, 										Address offset: 0x04*/
+	volatile uint32_t SR;				/*!<SPI status register, 											Address offset: 0x08*/
+	volatile uint32_t DR;				/*!<SPI data register, 												Address offset: 0x0C*/
+	volatile uint32_t CRCPR;			/*!<SPI CRC polynomial register, 									Address offset: 0x10*/
+	volatile uint32_t RXCRCR;			/*!<SPI RX CRC register, 											Address offset: 0x14*/
+	volatile uint32_t TXCRCR;			/*!<SPI TX CRC register, 											Address offset: 0x18*/
+	volatile uint32_t I2SCFGR;			/*!<SPI_i2S configuration register, 								Address offset: 0x1C*/
+	volatile uint32_t I2SPR;			/*!<SPI_I2S prescaler register, 									Address offset: 0x20*/
+} SPI_RegDef_t;
 
 /*
  *  peripheral register definition structure for SYSCFG
@@ -203,6 +218,10 @@ typedef struct
 
 #define SYSCFG		( (SYSCFG_RegDef_t*) SYSCFG_BASEADDR )
 
+#define SPI1		( (SPI_RegDef_t*)SPI1_BASEADDR )
+#define SPI2		( (SPI_RegDef_t*)SPI2_BASEADDR )
+#define SPI3		( (SPI_RegDef_t*)SPI3_BASEADDR )
+
 /*
  * Clock Enable Macros for GPIOx peripherals
 */
@@ -230,9 +249,9 @@ typedef struct
 */
 
 #define SPI1_PCLK_EN() 		( RCC->APB2ENR |= (1 << 12) )
-
 #define SPI2_PCLK_EN() 		( RCC->APB1ENR |= (1 << 14) )
 #define SPI3_PCLK_EN() 		( RCC->APB1ENR |= (1 << 15) )
+#define SPI4_PCLK_EN() 		( RCC->APB2ENR |= (1 << 13) )
 
 /*
  * Clock Enable Macros for USARTx peripherals
@@ -284,9 +303,9 @@ typedef struct
 */
 
 #define SPI1_PCLK_DI() 		( RCC->APB2ENR &= ~(1 << 12) )
-
 #define SPI2_PCLK_DI() 		( RCC->APB1ENR &= ~(1 << 14) )
 #define SPI3_PCLK_DI() 		( RCC->APB1ENR &= ~(1 << 15) )
+#define SPI4_PCLK_DI() 		( RCC->APB2ENR &= ~(1 << 13) )
 
 /*
  * Clock Disable Macros for USARTx peripherals
