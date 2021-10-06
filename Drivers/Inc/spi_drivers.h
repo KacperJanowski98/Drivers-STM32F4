@@ -79,8 +79,8 @@ typedef struct
 /**
  * @SPI_SSM
  */
-#define SPI_SSM_HW					1
-#define SPI_SSM_SW					0
+#define SPI_SSM_EN					1
+#define SPI_SSM_DI					0
 
 /**
  * SPI related status flags definitions
@@ -127,5 +127,6 @@ void SPI_IRQHandling(SPI_Handle_t *pHandle);
  * Other Peripheral Control APIs
  */
 uint8_t SPI_GetFlagStatus(SPI_RegDef_t *pSPIx, uint32_t FlagName);
+void SPI_PeripheralControl(SPI_RegDef_t *pSPIx, uint8_t EnOrDi);
 
 #endif /* INC_SPI_DRIVERS_H_ */

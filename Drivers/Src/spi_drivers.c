@@ -53,6 +53,9 @@ void SPI_PeriClockControl(SPI_RegDef_t *pSPIx, uint8_t EnorDi)
  *********************************************************************************************************/
 void SPI_Init(SPI_Handle_t *pSPIHandle)
 {
+	//Peripheral clock enable
+	SPI_PeriClockControl(pSPIHandle->pSPI, ENABLE);
+
 	// First configure the SPI_CR1 register
 	uint32_t tempreg = 0;
 	//1. configure the device mode
@@ -165,6 +168,24 @@ void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t Len)
 	}
 }
 
+/**********************************************************************************************************
+ * @fn 				- SPI_PeripheralControl
+ *
+ * #brief 			- This function enable or disable SPE bit in control register 1
+ * pSPIx			- This is structure which contain: base address of the SPI peripheral and pin configuration
+ * EnOrDi			- ENABLE or DISABLE macros
+ *
+ *********************************************************************************************************/
+void SPI_PeripheralControl(SPI_RegDef_t *pSPIx, uint8_t EnOrDi)
+{
+	if (EnOrDi == ENABLE)
+	{
+		pSPIx->CR1 |= (1 << SPI_CR1_SPE);
+	} else
+	{
+		pSPIx->CR1 &= ~(1 << SPI_CR1_SPE);
+	}
+}
 
 
 
