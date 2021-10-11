@@ -169,6 +169,41 @@ void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t Len)
 }
 
 /**********************************************************************************************************
+ * @fn 				- SPI_ReceiveData
+ *
+ * #brief 			- This function receive data by specific SPI
+ * pSPIx			- This is structure which contain: base address of the SPI peripheral and pin configuration
+ * pTxBuffer		- Pointer to buffer for receive data
+ * Len				- Length of data
+ *
+ *********************************************************************************************************/
+void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t Len)
+{
+	while (Len > 0)
+	{
+		//1. Wait until RXNE is set
+		while (SPI_GetFlagStatus(pSPIx, SPI_RXNE_FLAG) == FLAG_RESET);
+
+		//2. Check the DFF bit in CR1
+		if (pSPIx->CR1 & ( 1 << SPI_CR1_DFF ))
+		{
+			// 16 bit DFF
+			//1. Load data from DR to RxBuffer address
+			*(uint16_t*)pRxBuffer = pSPIx->DR;
+			Len--;
+			Len--;
+			(uint16_t*)pRxBuffer++;
+		} else
+		{
+			// 8 bit DFF
+			*(uint16_t*)pRxBuffer = pSPIx->DR;
+			Len--;
+			pRxBuffer++;
+		}
+	}
+}
+
+/**********************************************************************************************************
  * @fn 				- SPI_PeripheralControl
  *
  * #brief 			- This function enable or disable SPE bit in control register 1
