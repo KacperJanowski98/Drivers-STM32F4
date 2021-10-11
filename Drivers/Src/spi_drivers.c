@@ -205,3 +205,22 @@ void SPI_SSIConfig(SPI_RegDef_t *pSPIx, uint8_t EnOrDi)
 		pSPIx->CR1 &= ~(1 << SPI_CR1_SSI);
 	}
 }
+
+/**********************************************************************************************************
+ * @fn 				- SPI_SSOEConfig
+ *
+ * #brief 			- This function enable or disable SSOE bit in control register 2
+ * pSPIx			- This is structure which contain: base address of the SPI peripheral and pin configuration
+ * EnOrDi			- ENABLE or DISABLE macros
+ *
+ *********************************************************************************************************/
+void SPI_SSOEConfig(SPI_RegDef_t *pSPIx, uint8_t EnOrDi)
+{
+	if (EnOrDi == ENABLE)
+	{
+		pSPIx->CR2 |= (1 << SPI_CR2_SSOE);
+	} else
+	{
+		pSPIx->CR2 &= ~(1 << SPI_CR2_SSOE);
+	}
+}
