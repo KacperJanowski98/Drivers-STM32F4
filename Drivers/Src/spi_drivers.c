@@ -211,19 +211,32 @@ void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t Len)
  * pTxBuffer		- Pointer to buffer for transmit data
  * Len				- Length of data
  *
+ * @return 			- SPI application state
+ *
  * @Note			- This is interupt call
  *
  *********************************************************************************************************/
-void SPI_SendDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pTxBuffer, uint32_t Len)
+uint8_t SPI_SendDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pTxBuffer, uint32_t Len)
 {
-	//1. Save the Tx buffer address and Len information in some global variable
+	uint8_t state = pSPIHandle->TxState;
 
-	//2. Mark the SPI state as busy in transmission so that
-	//	 no other code can take over same SPI peripheral until transmission is over
+	if (state != SPI_BUSY_IN_RX)
+	{
+		//1. Save the Tx buffer address and Len information in some global variable
+		pSPIHandle->pTxBuffer = pTxBuffer;
+		pSPIHandle->TxLen = Len;
 
-	//3. Enable the TXEIE control bit to get interrupt whenever TXE flag is set in SR
+		//2. Mark the SPI state as busy in transmission so that
+		//	 no other code can take over same SPI peripheral until transmission is over
+		pSPIHandle->TxState = SPI_BUSY_IN_TX;
+
+		//3. Enable the TXEIE control bit to get interrupt whenever TXE flag is set in SR
+		pSPIHandle->pSPI->CR2 |= (1 << SPI_CR2_TXEIE);
+	}
 
 	//4. Data Transmission will be handled by the ISR code
+
+	return state;
 }
 
 /**********************************************************************************************************
@@ -234,8 +247,10 @@ void SPI_SendDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pTxBuffer, uint32_t Len)
  * pTxBuffer		- Pointer to buffer for receive data
  * Len				- Length of data
  *
+ * @return 			- SPI application state
+ *
  *********************************************************************************************************/
-void SPI_ReceiveDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pRxBuffer, uint32_t Len)
+uint8_t SPI_ReceiveDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pRxBuffer, uint32_t Len)
 {
 
 }
