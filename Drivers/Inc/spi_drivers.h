@@ -31,6 +31,12 @@ typedef struct
 {
 	SPI_RegDef_t *pSPI;								/*!< This holds the base address of SPIx(x:0,1,2) */
 	SPI_Config_t SPIConfig;							/*!< This holds SPI pin configuration settings >*/
+	uint8_t		 *pTxBuffer;						/*!< To store the app. Tx buffer address >*/
+	uint8_t		 *pRxBuffer;						/*!< To store the app. Rx buffer >*/
+	uint8_t 	 TxLen;								/*!< To store Tx len >*/
+	uint8_t      RxLen;								/*!< To store Rx len >*/
+	uint8_t		 TxState;							/*!< To store Tx state >*/
+	uint8_t		 RxState;							/*!< To store Rx state >*/
 }SPI_Handle_t;
 
 /**
@@ -81,6 +87,13 @@ typedef struct
  */
 #define SPI_SSM_EN					1
 #define SPI_SSM_DI					0
+
+/**
+ * SPI state
+ */
+#define SPI_READY					0
+#define SPI_BUSY_IN_RX				1
+#define SPI_BUSY_IN_TX				2
 
 /**
  * SPI related status flags definitions
