@@ -7,6 +7,10 @@
 
 #include "spi_drivers.h"
 
+static void spi_txe_interrupt_handle(SPI_Handle_t *pSPIHandle);
+static void spi_rxne_interrupt_handle(SPI_Handle_t *pSPIHandle);
+static void spi_ovr_err_interrupt_handle(SPI_Handle_t *pSPIHandle);
+
 /**********************************************************************************************************
  * @fn 				- SPI_PeriClockControl
  *
@@ -332,11 +336,147 @@ void SPI_IRQPriorityConfig (uint8_t IRQNumber, uint32_t IRQPriority)
 	*(NVIC_PR_BASE_ADDR + iprx) |= (IRQPriority << shift_amount);
 }
 
+/**********************************************************************************************************
+ * @fn 				- SPI_IRQHandling
+ *
+ * #brief 			-
+ * PinNumber		- Base address of the spi peripheral
+ *
+ *********************************************************************************************************/
 void SPI_IRQHandling(SPI_Handle_t *pHandle)
 {
+	uint8_t temp1, temp2;
+	//First check for TXE
+	temp1 = pHandle->pSPI->SR & (1 << SPI_SR_TXE);
+	temp2 = pHandle->pSPI->CR2 & (1 << SPI_CR2_TXEIE);
+
+	if (temp1 && temp2)
+	{
+		//handle TXE
+		spi_txe_interrupt_handle(pHandle);
+	}
+
+	//Check for RXNE
+	temp1 = pHandle->pSPI->SR & (1 << SPI_SR_RXNE);
+	temp2 = pHandle->pSPI->CR2 & (1 << SPI_CR2_RXNEIE);
+
+	if (temp1 && temp2)
+	{
+		//handle TXE
+		spi_rxne_interrupt_handle(pHandle);
+	}
+
+	//Check for ovr flag
+	temp1 = pHandle->pSPI->SR & (1 << SPI_SR_OVR);
+	temp2 = pHandle->pSPI->CR2 & (1 << SPI_CR2_ERRIE);
+
+	if (temp1 && temp2)
+	{
+		//handle ovr error
+		spi_ovr_err_interrupt_handle(pHandle);
+	}
+}
+
+// Some helper function implementations
+
+static void spi_txe_interrupt_handle(SPI_Handle_t *pSPIHandle)
+{
+	// Check the DFF bit in CR1
+	if (pSPIHandle->pSPI->CR1 & ( 1 << SPI_CR1_DFF ))
+	{
+		// 16 bit DFF
+		//1. Load data in to the DR
+		pSPIHandle->pSPI->DR = *((uint16_t*)pSPIHandle->pTxBuffer);
+		pSPIHandle->TxLen--;
+		pSPIHandle->TxLen--;
+		(uint16_t*)pSPIHandle->pTxBuffer++;
+	} else
+	{
+		// 8 bit DFF
+		pSPIHandle->pSPI->DR = *pSPIHandle->pTxBuffer;
+		pSPIHandle->TxLen--;
+		pSPIHandle->pTxBuffer++;
+	}
+
+	if (!pSPIHandle->TxLen)
+	{
+		//TxLen is zero, so close the spi transmission and inform the application that TX is over.
+		//This prevents interrupts from setting up of TXE flag
+		SPI_CloseTransmission(pSPIHandle);
+		SPI_ApplicationEventCallback(pSPIHandle, SPI_EVENT_TX_CMPLT);
+	}
+}
+
+static void spi_rxne_interrupt_handle(SPI_Handle_t *pSPIHandle)
+{
+	// Check the DFF bit in CR1
+	if (pSPIHandle->pSPI->CR1 & ( 1 << SPI_CR1_DFF ))
+	{
+		// 16 bit
+		*((uint16_t*)pSPIHandle->pRxBuffer) = (uint16_t)pSPIHandle->pSPI->DR;
+		pSPIHandle->RxLen -= 2;
+		pSPIHandle->pRxBuffer--;
+		pSPIHandle->pRxBuffer--;
+	} else
+	{
+		// 8 bit
+		*(pSPIHandle->pRxBuffer) = (uint8_t)pSPIHandle->pSPI->DR;
+		pSPIHandle->RxLen--;
+		pSPIHandle->pRxBuffer--;
+	}
+
+	if (!pSPIHandle->TxLen)
+	{
+		//reception is complete
+		//turn off the rxneie interrupt
+		SPI_CloseReception(pSPIHandle);
+		SPI_ApplicationEventCallback(pSPIHandle, SPI_EVENT_RX_CMPLT);
+	}
+}
+
+static void spi_ovr_err_interrupt_handle(SPI_Handle_t *pSPIHandle)
+{
+	uint8_t temp;
+	//1. Clear the ovr flag
+	if (pSPIHandle->TxState != SPI_BUSY_IN_TX)
+	{
+		temp = pSPIHandle->pSPI->DR;
+		temp = pSPIHandle->pSPI->SR;
+	}
+	(void)temp;
+	//2. Inform the application
+	SPI_ApplicationEventCallback(pSPIHandle, SPI_EVENT_OVR_ERR);
 
 }
 
+void SPI_CloseTransmission(SPI_Handle_t *pSPIHandle)
+{
+	pSPIHandle->pSPI->CR2 &= ~(1 << SPI_CR2_TXEIE);
+	pSPIHandle->pTxBuffer = NULL;
+	pSPIHandle->TxLen = 0;
+	pSPIHandle->TxState = SPI_READY;
+}
+
+void SPI_CloseReception(SPI_Handle_t *pSPIHandle)
+{
+	pSPIHandle->pSPI->CR2 &= ~(1 << SPI_CR2_RXNEIE);
+	pSPIHandle->pRxBuffer = NULL;
+	pSPIHandle->RxLen = 0;
+	pSPIHandle->RxState = SPI_READY;
+}
+
+void SPI_ClearOVRFlag(SPI_RegDef_t *pSPIx)
+{
+	uint8_t temp;
+	temp = pSPIx->DR;
+	temp = pSPIx->SR;
+	(void)temp;
+}
+
+__attribute__((weak)) void SPI_ApplicationEventCallback(SPI_Handle_t *pSPIHandle, uint8_t AppEv)
+{
+	//This is a weak implementation. The application may override this function.
+}
 
 /**********************************************************************************************************
  * @fn 				- SPI_PeripheralControl
