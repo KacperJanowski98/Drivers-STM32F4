@@ -203,6 +203,81 @@ void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t Len)
 	}
 }
 
+void SPI_SendDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pTxBuffer, uint32_t Len)
+{
+
+}
+
+void SPI_ReceiveDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pRxBuffer, uint32_t Len)
+{
+
+}
+
+/**********************************************************************************************************
+ * @fn 				- SPI_IRQInterruptConfig
+ *
+ * #brief 			-
+ * IRQNumber		- Number interrupt register which you would like to enable or disable
+ * EnorDi	 		- ENABLE or DISABLE macros
+ *
+ *********************************************************************************************************/
+void SPI_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi)
+{
+	if (EnorDi == ENABLE)
+	{
+		if (IRQNumber <= 31)
+		{
+			// Program ISER0 register
+			*NVIC_ISER0 |= (1 << IRQNumber);
+		} else if (IRQNumber > 31 && IRQNumber < 64)
+		{
+			// Program ISER1 register
+			*NVIC_ISER1 |= (1 << IRQNumber % 32);
+		} else if (IRQNumber >= 64 && IRQNumber < 96)
+		{
+			// Program ISER2 register
+			*NVIC_ISER3 |= (1 << IRQNumber % 64);
+		}
+	} else
+	{
+		if (IRQNumber <= 31)
+		{
+			*NVIC_ICER0 |= (1 << IRQNumber);
+		} else if (IRQNumber > 31 && IRQNumber < 64)
+		{
+			*NVIC_ICER1 |= (1 << IRQNumber % 32);
+		} else if (IRQNumber >= 64 && IRQNumber < 96)
+		{
+			*NVIC_ICER3 |= (1 << IRQNumber % 64);
+		}
+	}
+}
+
+/**********************************************************************************************************
+ * @fn 				- SPI_IRQPriorityConfig
+ *
+ * #brief 			-
+ * IRQNumber		- Number interrupt register
+ * IRQPriority 		- Number of priority
+ *
+ *********************************************************************************************************/
+void SPI_IRQPriorityConfig (uint8_t IRQNumber, uint32_t IRQPriority)
+{
+	//1. First lets find out the ipr register
+	uint8_t iprx = IRQNumber / 4;
+	uint8_t iprx_section = IRQNumber % 4;
+
+	uint8_t shift_amount = (8 * iprx_section) + (8 - NO_PR_BITS_IMPLEMENTED);
+
+	*(NVIC_PR_BASE_ADDR + iprx) |= (IRQPriority << shift_amount);
+}
+
+void SPI_IRQHandling(SPI_Handle_t *pHandle)
+{
+
+}
+
+
 /**********************************************************************************************************
  * @fn 				- SPI_PeripheralControl
  *
