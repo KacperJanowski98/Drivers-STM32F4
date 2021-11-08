@@ -21,3 +21,12 @@ Library containing drivers for handling peripherals on the STM32F407G-DISC1 boar
 - ***SPI RX***
 - ***SPI Interrupt configure & handling***
 - ***Other SPI management APIs***
+
+### I2C Drivers APIs requirements:
+- ***I2C Initialization***
+- ***I2C Master TX***
+- ***I2C Master RX***
+- ***I2C Slave Tx***
+- ***I2C Slave Rx***
+- ***I2C Error Interrupt handling***
+- ***I2C Event Interrupt handling***
