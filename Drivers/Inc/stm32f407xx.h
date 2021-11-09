@@ -194,7 +194,7 @@ typedef struct
 	volatile uint32_t CR2;
 	volatile uint32_t OAR1;
 	volatile uint32_t OAR2;
-	volatile uint32_t CDR;
+	volatile uint32_t DR;
 	volatile uint32_t SR1;
 	volatile uint32_t SR2;
 	volatile uint32_t CCR;
