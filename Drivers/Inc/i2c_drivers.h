@@ -46,8 +46,8 @@ typedef struct
 /**
  * @I2C_FMDutyCycle
  */
-#define I2C_SFM_DUTY_2			0
-#define I2C_SFM_DUTY_16_9		1
+#define I2C_FM_DUTY_2			0
+#define I2C_FM_DUTY_16_9		1
 
 /****************************************************************************************************************
  *										 APIs supported by this driver
@@ -81,6 +81,8 @@ void I2C_IRQPriorityConfig (uint8_t IRQNumber, uint32_t IRQPriority);
  */
 uint8_t I2C_GetFlagStatus(I2C_RegDef_t *pI2Cx, uint32_t FlagName);
 void I2C_PeripheralControl(I2C_RegDef_t *pI2Cx, uint8_t EnOrDi);
+uint32_t RCC_GetPCLK1Value(void);
+uint32_t RCC_GetPLLOutputClock();
 
 /**
  * Application callback
