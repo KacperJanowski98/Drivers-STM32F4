@@ -523,6 +523,27 @@ uint8_t I2C_MasterReceiveDataIT(I2C_Handle_t *pI2CHandle, uint8_t *pRxbuffer, ui
 {
 	uint8_t busystate = pI2CHandle->TxRxState;
 
+	if((busystate != I2C_BUSY_IN_TX) && (busystate != I2C_BUSY_IN_RX))
+	{
+		pI2CHandle->pRxBuffer = pRxbuffer;
+		pI2CHandle->RxLen = Len;
+		pI2CHandle->TxRxState = I2C_BUSY_IN_RX;
+		pI2CHandle->DevAddr = SlaveAddr;
+		pI2CHandle->Sr = Sr;
+
+		// Implement code to generate START Condition
+		I2C_GenerateStartCondition(pI2CHandle->pI2Cx);
+
+		// Implement the code to enable ITBUFEN Control Bit
+		pI2CHandle->pI2Cx->CR2 |= (1 << I2C_CR2_ITBUFFEN);
+
+		// Implement the code to enable ITEVFEN Control Bit
+		pI2CHandle->pI2Cx->CR2 |= (1 << I2C_CR2_ITEVTEN);
+
+		// Implement the code to enable ITERREN Control Bit
+		pI2CHandle->pI2Cx->CR2 |= (1 << I2C_CR2_ITERREN);
+	}
+
 	return busystate;
 }
 
