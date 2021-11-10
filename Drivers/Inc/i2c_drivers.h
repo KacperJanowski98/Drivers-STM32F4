@@ -80,6 +80,16 @@ typedef struct
 #define I2C_FLAG_ADDR			( 1 << I2C_SR1_ADDR )
 #define I2C_FLAG_TIMEOUT		( 1 << I2C_SR1_SR1_TIMEOUT )
 
+#define I2C_DISABLE_SR			RESET
+#define I2C_ENABLE_SR			SET
+
+/**
+ * I2C application events macros
+ */
+#define I2C_EV_RX_CMPLT			1
+#define I2C_EV_TX_CMPLT			0
+#define I2C_EV_STOP				2
+
 /****************************************************************************************************************
  *										 APIs supported by this driver
  * 						For more information about the APIs check the function definitions
@@ -121,6 +131,8 @@ void I2C_PeripheralControl(I2C_RegDef_t *pI2Cx, uint8_t EnOrDi);
 uint32_t RCC_GetPCLK1Value(void);
 uint32_t RCC_GetPLLOutputClock();
 void I2C_ManageAcking(I2C_RegDef_t *pI2Cx, uint8_t EnorDi);
+void I2C_CloseSendData(I2C_Handle_t *pI2CHandle);
+void I2C_CloseReceiveData(I2C_Handle_t *pI2CHandle);
 
 /**
  * Application callback
