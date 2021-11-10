@@ -411,6 +411,36 @@ void I2C_MasterReceiveData(I2C_Handle_t *pI2CHandle, uint8_t *pRxbuffer, uint32_
 }
 
 /**********************************************************************************************************
+ * @fn 				- I2C_MasterSendDataIT
+ *
+ * #brief 			- This function to send data by master to slave
+ * pI2CHandle		- This is structure which contain: base address of the I2C peripheral and pin configuration
+ * pTxbuffer		- Buffer for transmit data
+ * Len				- Length of data
+ * SlaveAddr		- Address of slave device
+ *
+ *********************************************************************************************************/
+uint8_t I2C_MasterSendDataIT(I2C_Handle_t *pI2CHandle, uint8_t *pTxbuffer, uint32_t Len, uint8_t SlaveAddr)
+{
+
+}
+
+/**********************************************************************************************************
+ * @fn 				- I2C_MasterReceiveDataIT
+ *
+ * #brief 			- This function to send data by master to slave
+ * pI2CHandle		- This is structure which contain: base address of the I2C peripheral and pin configuration
+ * pRxbuffer		- Buffer for receive data
+ * Len				- Length of data
+ * SlaveAddr		- Address of slave device
+ *
+ *********************************************************************************************************/
+uint8_t I2C_MasterReceiveDataIT(I2C_Handle_t *pI2CHandle, uint8_t *pRxbuffer, uint32_t Len, uint8_t SlaveAddr)
+{
+
+}
+
+/**********************************************************************************************************
  * @fn 				- I2C_ManageAcking
  *
  * #brief 			- This function enables or disables acknowledge bit in I2C

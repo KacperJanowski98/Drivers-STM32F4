@@ -28,6 +28,14 @@ typedef struct
 {
 	I2C_RegDef_t *pI2Cx;
 	I2C_Config_t I2C_Config;
+	uint8_t 	 *pTxBuffer;	/* !< To store the app. Tx buffer address > */
+	uint8_t 	 *pRxBuffer;	/* !< To store the app. Rx buffer address > */
+	uint32_t	 TxLen;			/* !< To store Tx length > */
+	uint32_t	 RxLen;			/* !< To store Rx length > */
+	uint8_t		 TxRxState;		/* !< To store Communication state > */
+	uint8_t		 DevAddr;		/* !< To store slave/device address > */
+	uint32_t 	 RxSize;		/* !< To store Rx size > */
+	uint8_t		 Sr;			/* !< To store repeated start value > */
 } I2C_Handle_t;
 
 /**
@@ -48,6 +56,13 @@ typedef struct
  */
 #define I2C_FM_DUTY_2			0
 #define I2C_FM_DUTY_16_9		1
+
+/**
+ * @I2C application states
+ */
+#define I2C_READY				0
+#define I2C_BUSY_IN_RX			1
+#define I2C_BUSY_IN_TX			2
 
 /**
  * I2C related status flags definitions
@@ -86,6 +101,9 @@ void I2C_DeInit(I2C_RegDef_t *pI2Cx);
  */
 void I2C_MasterSendData(I2C_Handle_t *pI2CHandle, uint8_t *pTxbuffer, uint32_t Len, uint8_t SlaveAddr);
 void I2C_MasterReceiveData(I2C_Handle_t *pI2CHandle, uint8_t *pRxbuffer, uint32_t Len, uint8_t SlaveAddr);
+
+uint8_t I2C_MasterSendDataIT(I2C_Handle_t *pI2CHandle, uint8_t *pTxbuffer, uint32_t Len, uint8_t SlaveAddr);
+uint8_t I2C_MasterReceiveDataIT(I2C_Handle_t *pI2CHandle, uint8_t *pRxbuffer, uint32_t Len, uint8_t SlaveAddr);
 
 /**
  * IRQ Configuration and ISR handling
