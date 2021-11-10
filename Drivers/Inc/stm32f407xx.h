@@ -527,7 +527,7 @@ typedef struct
 #define I2C_SR1_ARLO		9
 #define I2C_SR1_AF			10
 #define I2C_SR1_OVER		11
-#define I2C_SR1_SR1_TIMEOUT	14
+#define I2C_SR1_TIMEOUT		14
 
 /*
  *	Bit position definitions I2C_SR2
