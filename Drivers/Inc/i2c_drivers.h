@@ -121,6 +121,9 @@ void I2C_MasterReceiveData(I2C_Handle_t *pI2CHandle, uint8_t *pRxbuffer, uint32_
 uint8_t I2C_MasterSendDataIT(I2C_Handle_t *pI2CHandle, uint8_t *pTxbuffer, uint32_t Len, uint8_t SlaveAddr, uint8_t Sr);
 uint8_t I2C_MasterReceiveDataIT(I2C_Handle_t *pI2CHandle, uint8_t *pRxbuffer, uint32_t Len, uint8_t SlaveAddr, uint8_t Sr);
 
+void I2C_SlaveSendData(I2C_RegDef_t *pI2C, uint8_t data);
+uint8_t I2C_SlaveReceiveData(I2C_RegDef_t *pI2C);
+
 /**
  * IRQ Configuration and ISR handling
  */

@@ -648,6 +648,32 @@ static void I2C_MasterHandleRXNEInterrupt(I2C_Handle_t *pI2CHandle)
 }
 
 /**********************************************************************************************************
+ * @fn 				- I2C_SlaveSendData
+ *
+ * #brief 			- This function is for send data in slave mode
+ * pI2Cx			- This is structure which contain: base address of the I2C peripheral and pin configuration
+ * data				- Data to send
+ *
+ *********************************************************************************************************/
+void I2C_SlaveSendData(I2C_RegDef_t *pI2C, uint8_t data)
+{
+	pI2C->DR = data;
+}
+
+/**********************************************************************************************************
+ * @fn 				- I2C_SlaveReceiveData
+ *
+ * #brief 			- This function is for receive data in slave mode
+ * pI2Cx			- This is structure which contain: base address of the I2C peripheral and pin configuration
+ * @return			- Read Data
+ *
+ *********************************************************************************************************/
+uint8_t I2C_SlaveReceiveData(I2C_RegDef_t *pI2C)
+{
+	return pI2C->DR;
+}
+
+/**********************************************************************************************************
  * @fn 				- I2C_EV_IRQHandling
  *
  * #brief 			- This function to EV handling
