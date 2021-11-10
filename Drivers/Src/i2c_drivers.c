@@ -411,6 +411,65 @@ void I2C_MasterReceiveData(I2C_Handle_t *pI2CHandle, uint8_t *pRxbuffer, uint32_
 }
 
 /**********************************************************************************************************
+ * @fn 				- I2C_IRQInterruptConfig
+ *
+ * #brief 			-
+ * IRQNumber		- Number interrupt register which you would like to enable or disable
+ * EnorDi	 		- ENABLE or DISABLE macros
+ *
+ *********************************************************************************************************/
+void I2C_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi)
+{
+	if (EnorDi == ENABLE)
+	{
+		if (IRQNumber <= 31)
+		{
+			// Program ISER0 register
+			*NVIC_ISER0 |= (1 << IRQNumber);
+		} else if (IRQNumber > 31 && IRQNumber < 64)
+		{
+			// Program ISER1 register
+			*NVIC_ISER1 |= (1 << IRQNumber % 32);
+		} else if (IRQNumber >= 64 && IRQNumber < 96)
+		{
+			// Program ISER2 register
+			*NVIC_ISER3 |= (1 << IRQNumber % 64);
+		}
+	} else
+	{
+		if (IRQNumber <= 31)
+		{
+			*NVIC_ICER0 |= (1 << IRQNumber);
+		} else if (IRQNumber > 31 && IRQNumber < 64)
+		{
+			*NVIC_ICER1 |= (1 << IRQNumber % 32);
+		} else if (IRQNumber >= 64 && IRQNumber < 96)
+		{
+			*NVIC_ICER3 |= (1 << IRQNumber % 64);
+		}
+	}
+}
+
+/**********************************************************************************************************
+ * @fn 				- I2C_IRQPriorityConfig
+ *
+ * #brief 			-
+ * IRQNumber		- Number interrupt register
+ * IRQPriority 		- Number of priority
+ *
+ *********************************************************************************************************/
+void I2C_IRQPriorityConfig (uint8_t IRQNumber, uint32_t IRQPriority)
+{
+	//1. Find out the ipr register
+	uint8_t iprx = IRQNumber / 4;
+	uint8_t iprx_section = IRQNumber % 4;
+
+	uint8_t shift_amount = (8 * iprx_section) + (8 - NO_PR_BITS_IMPLEMENTED);
+
+	*(NVIC_PR_BASE_ADDR + iprx) |= (IRQPriority << shift_amount);
+}
+
+/**********************************************************************************************************
  * @fn 				- I2C_MasterSendDataIT
  *
  * #brief 			- This function to send data by master to slave
@@ -418,11 +477,35 @@ void I2C_MasterReceiveData(I2C_Handle_t *pI2CHandle, uint8_t *pRxbuffer, uint32_
  * pTxbuffer		- Buffer for transmit data
  * Len				- Length of data
  * SlaveAddr		- Address of slave device
+ * @return			- Busy state
  *
  *********************************************************************************************************/
-uint8_t I2C_MasterSendDataIT(I2C_Handle_t *pI2CHandle, uint8_t *pTxbuffer, uint32_t Len, uint8_t SlaveAddr)
+uint8_t I2C_MasterSendDataIT(I2C_Handle_t *pI2CHandle, uint8_t *pTxbuffer, uint32_t Len, uint8_t SlaveAddr, uint8_t Sr)
 {
+	uint8_t busystate = pI2CHandle->TxRxState;
 
+	if((busystate != I2C_BUSY_IN_TX) && (busystate != I2C_BUSY_IN_RX))
+	{
+		pI2CHandle->pTxBuffer = pTxbuffer;
+		pI2CHandle->TxLen = Len;
+		pI2CHandle->TxRxState = I2C_BUSY_IN_TX;
+		pI2CHandle->DevAddr = SlaveAddr;
+		pI2CHandle->Sr = Sr;
+
+		// Implement code to generate START Condition
+		I2C_GenerateStartCondition(pI2CHandle->pI2Cx);
+
+		// Implement the code to enable ITBUFEN Control Bit
+		pI2CHandle->pI2Cx->CR2 |= (1 << I2C_CR2_ITBUFFEN);
+
+		// Implement the code to enable ITEVFEN Control Bit
+		pI2CHandle->pI2Cx->CR2 |= (1 << I2C_CR2_ITEVTEN);
+
+		// Implement the code to enable ITERREN Control Bit
+		pI2CHandle->pI2Cx->CR2 |= (1 << I2C_CR2_ITERREN);
+	}
+
+	return busystate;
 }
 
 /**********************************************************************************************************
@@ -433,11 +516,14 @@ uint8_t I2C_MasterSendDataIT(I2C_Handle_t *pI2CHandle, uint8_t *pTxbuffer, uint3
  * pRxbuffer		- Buffer for receive data
  * Len				- Length of data
  * SlaveAddr		- Address of slave device
+ * @return			- Busy state
  *
  *********************************************************************************************************/
-uint8_t I2C_MasterReceiveDataIT(I2C_Handle_t *pI2CHandle, uint8_t *pRxbuffer, uint32_t Len, uint8_t SlaveAddr)
+uint8_t I2C_MasterReceiveDataIT(I2C_Handle_t *pI2CHandle, uint8_t *pRxbuffer, uint32_t Len, uint8_t SlaveAddr, uint8_t Sr)
 {
+	uint8_t busystate = pI2CHandle->TxRxState;
 
+	return busystate;
 }
 
 /**********************************************************************************************************

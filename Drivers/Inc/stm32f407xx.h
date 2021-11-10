@@ -407,6 +407,11 @@ typedef struct
 #define IRQ_NO_EXTI4			10
 #define IRQ_NO_EXTI9_5			23
 #define IRQ_NO_EXTI15_10		40
+#define IRQ_NO_SPI1				35
+#define IRQ_NO_SPI2				36
+#define IRQ_NO_SPI3				51
+#define IRQ_NO_I2C1_EV			31
+#define IRQ_NO_I2C1_ER			32
 
 /*
  * macros for all the possible priority levels
@@ -504,9 +509,9 @@ typedef struct
  *	Bit position definitions I2C_CR2
 */
 #define I2C_CR2_FREQ		0
-#define I2C_CR2_ITEREN		7
+#define I2C_CR2_ITERREN		7
 #define I2C_CR2_ITEVTEN		8
-#define I2C_ITBUFFEN		9
+#define I2C_CR2_ITBUFFEN	9
 
 /*
  *	Bit position definitions I2C_SR1
