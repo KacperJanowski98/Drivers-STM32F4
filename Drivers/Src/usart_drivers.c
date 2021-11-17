@@ -155,3 +155,30 @@ void USART_Init(USART_Handle_t *pUSARTHandle)
 	//We will cover this in the lecture. No action required here
 
 }
+
+/*********************************************************************
+ * @fn      		  - USART_DeInit
+ *
+ * @brief             - Function for de initialization USART
+ *
+ * @pUSARTx     	  - Structure with configure registers USART
+ */
+void USART_DeInit(USART_RegDef_t *pUSARTx)
+{
+	if(pUSARTx == USART1)
+	{
+		USART1_REG_RESET();
+	} else if (pUSARTx == USART2)
+	{
+		USART2_REG_RESET();
+	} else if ( pUSARTx == USART3)
+	{
+		USART3_REG_RESET();
+	} else if (pUSARTx == UART4)
+	{
+		UART4_REG_RESET();
+	} else if (pUSARTx == UART5)
+	{
+		UART5_REG_RESET();
+	}
+}
