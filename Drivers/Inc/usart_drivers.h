@@ -8,6 +8,7 @@
 #ifndef INC_USART_DRIVERS_H_
 #define INC_USART_DRIVERS_H_
 
+#include "stm32f407xx.h"
 /*
  * Configuration structure for USARTx peripheral
  */
@@ -34,9 +35,9 @@ typedef struct
  *@USART_Mode
  *Possible options for USART_Mode
  */
-#define USART_MODE_ONLY_TX 0
-#define USART_MODE_ONLY_RX 1
-#define USART_MODE_TXRX  2
+#define USART_MODE_ONLY_TX 				0
+#define USART_MODE_ONLY_RX 				1
+#define USART_MODE_TXRX  				2
 
 /*
  *@USART_Baud
@@ -60,25 +61,25 @@ typedef struct
  *@USART_ParityControl
  *Possible options for USART_ParityControl
  */
-#define USART_PARITY_EN_ODD   2
-#define USART_PARITY_EN_EVEN  1
-#define USART_PARITY_DISABLE   0
+#define USART_PARITY_EN_ODD   		2
+#define USART_PARITY_EN_EVEN  		1
+#define USART_PARITY_DISABLE   		0
 
 /*
  *@USART_WordLength
  *Possible options for USART_WordLength
  */
-#define USART_WORDLEN_8BITS  0
-#define USART_WORDLEN_9BITS  1
+#define USART_WORDLEN_8BITS 	 	0
+#define USART_WORDLEN_9BITS  		1
 
 /*
  *@USART_NoOfStopBits
  *Possible options for USART_NoOfStopBits
  */
-#define USART_STOPBITS_1     0
-#define USART_STOPBITS_0_5   1
-#define USART_STOPBITS_2     2
-#define USART_STOPBITS_1_5   3
+#define USART_STOPBITS_1     		0
+#define USART_STOPBITS_0_5   		1
+#define USART_STOPBITS_2     		2
+#define USART_STOPBITS_1_5   		3
 
 /*
  *@USART_HWFlowControl
