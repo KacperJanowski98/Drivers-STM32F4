@@ -30,3 +30,10 @@ Library containing drivers for handling peripherals on the STM32F407G-DISC1 boar
 - ***I2C Slave Rx***
 - ***I2C Error Interrupt handling***
 - ***I2C Event Interrupt handling***
+
+### UART Drivers APIs requirements:
+- ***USART Initialization / peripheral clock control***
+- ***USART TX***
+- ***USART RX***
+- ***USART Interrupt config. & handling***
+- ***Other USART management APIs***
