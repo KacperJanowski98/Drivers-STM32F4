@@ -402,3 +402,19 @@ uint8_t USART_ReceiveDataIT(USART_Handle_t *pUSARTHandle,uint8_t *pRxBuffer, uin
 	}
 	return rxstate;
 }
+
+/*********************************************************************
+ * @fn      		  - USART_ClearFlag
+ *
+ * @brief             - Function for clear flag
+ *
+ * @param[in]         - Structure with registers for specific USART
+ * @param[in]         - Name of flag
+ * @Note              - Applicable to only USART_CTS_FLAG , USART_LBD_FLAG
+ * USART_TC_FLAG,USART_TC_FLAG flags
+ */
+
+void USART_ClearFlag(USART_RegDef_t *pUSARTx, uint16_t StatusFlagName)
+{
+	pUSARTx->SR &= ~( StatusFlagName);
+}
