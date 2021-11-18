@@ -222,8 +222,7 @@ void USART_Init(USART_Handle_t *pUSARTHandle)
 /******************************** Configuration of BRR(Baudrate register)******************************************/
 
 	//Implement the code to configure the baud rate
-	//We will cover this in the lecture. No action required here
-
+	USART_SetBaudRate(pUSARTHandle->pUSARTx, pUSARTHandle->USART_Config.USART_Baud);
 }
 
 /*********************************************************************
