@@ -11,6 +11,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#define __weak __attribute__((weak))
+
 /********************************************** START:Processor Specific Details *********************************************/
 /*
  *  ARM Cortex Mx Processor NVIC ISERx register Addresses
