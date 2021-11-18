@@ -239,7 +239,7 @@ void USART_SendData(USART_Handle_t *pUSARTHandle, uint8_t *pTxBuffer, uint32_t L
 	for(uint32_t i = 0 ; i < Len; i++)
 	{
 		//Implement the code to wait until TXE flag is set in the SR
-		while(! USART_GetFlagStatus(pUSARTHandle->pUSARTx,USART_FLAG_TODO));
+		while(! USART_GetFlagStatus(pUSARTHandle->pUSARTx,USART_FLAG_TXE));
 
          //Check the USART_WordLength item for 9BIT or 8BIT in a frame
 		if(pUSARTHandle->USART_Config.USART_WordLength == USART_WORDLEN_9BITS)
@@ -390,18 +390,15 @@ uint8_t USART_SendDataIT(USART_Handle_t *pUSARTHandle,uint8_t *pTxBuffer, uint32
  */
 uint8_t USART_ReceiveDataIT(USART_Handle_t *pUSARTHandle,uint8_t *pRxBuffer, uint32_t Len)
 {
-	uint8_t rxstate = pUSARTHandle->TODO;
+	uint8_t rxstate = pUSARTHandle->RxBusyState;
 
-	if(rxstate != TODO)
+	if(rxstate != USART_BUSY_IN_RX)
 	{
 		pUSARTHandle->RxLen = Len;
-		pUSARTHandle->pRxBuffer = TODO;
-		pUSARTHandle->RxBusyState = TODO;
+		pUSARTHandle->pRxBuffer = pRxBuffer;
 
 		//Implement the code to enable interrupt for RXNE
-		TODO
-
+		pUSARTHandle->pUSARTx->CR1 |= (1 << USART_CR1_RXNEIE);
 	}
-
 	return rxstate;
 }
