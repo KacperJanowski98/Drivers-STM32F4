@@ -646,5 +646,6 @@ typedef struct
 #include "spi_drivers.h"
 #include "i2c_drivers.h"
 #include "usart_drivers.h"
+#include "rcc_drivers.h"
 
 #endif /* INC_STM32F407XX_H_ */
