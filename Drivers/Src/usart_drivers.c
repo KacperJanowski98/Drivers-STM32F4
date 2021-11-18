@@ -234,20 +234,19 @@ uint8_t USART_GetFlagStatus(USART_RegDef_t *pUSARTx, uint8_t StatusFlagName)
  */
 void USART_SendData(USART_Handle_t *pUSARTHandle, uint8_t *pTxBuffer, uint32_t Len)
 {
-
 	uint16_t *pdata;
    //Loop over until "Len" number of bytes are transferred
-	for(uint32_t i = 0 ; i < TODO; i++)
+	for(uint32_t i = 0 ; i < Len; i++)
 	{
 		//Implement the code to wait until TXE flag is set in the SR
 		while(! USART_GetFlagStatus(pUSARTHandle->pUSARTx,USART_FLAG_TODO));
 
          //Check the USART_WordLength item for 9BIT or 8BIT in a frame
-		if(pUSARTHandle->USART_Config.TODO == USART_WORDLEN_9BITS)
+		if(pUSARTHandle->USART_Config.USART_WordLength == USART_WORDLEN_9BITS)
 		{
 			//if 9BIT, load the DR with 2bytes masking the bits other than first 9 bits
 			pdata = (uint16_t*) pTxBuffer;
-			TODO = (*pdata & (uint16_t)0x01FF);
+			pUSARTHandle->pUSARTx->DR = (*pdata & (uint16_t)0x01FF);
 
 			//check for USART_ParityControl
 			if(pUSARTHandle->USART_Config.USART_ParityControl == USART_PARITY_DISABLE)
@@ -270,12 +269,12 @@ void USART_SendData(USART_Handle_t *pUSARTHandle, uint8_t *pTxBuffer, uint32_t L
 			pUSARTHandle->pUSARTx->DR = (*pTxBuffer  & (uint8_t)0xFF);
 
 			//Implement the code to increment the buffer address
-			TODO
+			pTxBuffer++;
 		}
 	}
 
 	//Implement the code to wait till TC flag is set in the SR
-	while( ! USART_GetFlagStatus(pUSARTHandle->pUSARTx,USART_FLAG_TODO));
+	while( ! USART_GetFlagStatus(pUSARTHandle->pUSARTx,USART_FLAG_TC));
 }
 
 
